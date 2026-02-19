@@ -4,10 +4,10 @@ import useCurrencyInfo from './hooks/useCurrencyInfo'
 
 function App() {
   
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("0");
   const [from,setFrom] = useState("usd")
   const [to,setTo] = useState("inr")
-  const [convertedAmount, setConvertedAmount] = useState(0)
+  const [convertedAmount, setConvertedAmount] = useState("0")
 
   const currencyInfo = useCurrencyInfo(from)
   const options = Object.keys(currencyInfo)
@@ -18,7 +18,8 @@ function App() {
     setAmount(convertedAmount)
   }
   const convert = ()=>{
-    setConvertedAmount(amount*currencyInfo[to])
+    if(!amount) return;
+    setConvertedAmount(Number(amount*currencyInfo[to].toFixed(2)))
   } 
     return (
         <div
@@ -39,7 +40,7 @@ function App() {
                             <InputBox
                                 label="From"
                                 amount={amount}
-                                onAmountChange={(amount)=>(amount>=0) ?setAmount(amount):0}
+                                onAmountChange={(amount)=>(amount === "" || amount>=0) ?setAmount(amount):0}
                                 onCurrencyChange={(currency)=>setFrom(currency)}
                                 currencyOptions={options}
                                 selectCurrency={from}
@@ -48,7 +49,7 @@ function App() {
                         <div className="relative w-full h-0.5">
                             <button
                                 type="button"
-                                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-md bg-blue-600 text-white px-2 py-0.5"
+                                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-md bg-blue-600 text-white px-2 py-0.5 cursor-pointer"
                                 onClick={swap}
                             >
                                 swap
@@ -64,7 +65,7 @@ function App() {
                                 amountDisable
                             />
                         </div>
-                        <button type="submit" className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg">
+                        <button type="submit" className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg cursor-pointer">
                             Convert {from.toUpperCase()} to {to.toUpperCase()}
                         </button>
                     </form>
